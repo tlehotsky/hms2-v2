@@ -675,6 +675,11 @@ base_dir = '/sys/bus/w1/devices/'
 online_sensor_list=[]
 testserial="28-000005c6ba08"
 
+########################################################
+######## Analytics onstants ############################
+########################################################
+
+
 high_outdoor_temp=0
 high_outdoor_temp_local=""
 high_outdoor_temp_time=""
