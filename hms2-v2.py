@@ -196,51 +196,6 @@ def edit_cloudant_system_status_doc(s, v, USERNAME, PASSWORD, URL):
 	my_document.save()
 	print ('\n\n************** system table updated************ read cycle:',read_cycles,'\n\n')
 
-# def pickaccount():
-
-
-# 	print("*************************************************************************")
-# 	print("****       1.   tlehotsky@gmail.com                                   ***")
-# 	print("****                                                                  ***")
-# 	print("****       2.   smart.lehotsky.house@gmail.com                        ***")
-# 	print("*************************************************************************")
-# 	print("\n")
-
-
-# 	#acct=input("enter 1 or 2: ")
-# 	acct=1
-
-# 	if acct==1:
-# 		account_name="tlehotsky@gmail.com"
-# 	else:
-# 		account_name="smart.lehotsky.house@gmail.com"
-
-
-
-# 	if account_name=="tlehotsky@gmail.com":
-# 		orgId="rdj4wy"
-# 		ds18b20_sensor_dict=    {'serial':'28-000005c6894a','location':'Basement RPi cabinet', 'token':'9CvY*mQZwV0Kf7792c','id':'ff02dab2420c92e6a664e0cb2252da16'},\
-# 								{'serial':'28-000005c77fc7','location':'Driveway','token':'YEZPv9m0x1FY6L6byX','id':'4b72bb5e1b0d3c9981a8a92b9f7022c1'},\
-# 								{'serial':'28-000005c685ba','location':'Kitchen','token':'3kQaAEj0!u*SIGyP(1','id':'d0adb1c0be3c69f3c9135fb1441886fb'},\
-# 								{'serial':'28-000005c7ed65','location':'Basement outside RPi cabinet','token':'zr@+Kp2@pRLS1+h?sf','id':'0a7e3e128eaad5f9ab828b8c16bfaa09'},\
-# 								{'serial':'28-000005c6ba08','location':'Garage', 'token':'Ljq*jt?EeCRfxbRare','id':'ccad5a0c4449b0e57dd0bd889ef6207c'},\
-# 								{'serial':'28-000005c7ce08','location':'Familyroom','token':'Tdez_RuWsF(sbOX3tB','id':'4b72bb5e1b0d3c9981a8a92b9f6f6608'},\
-# 								{'serial':'28-000005c6e555','location':'Water Heater','token':'2+5Oxwa4ms5@d+Vu(A','id':'9e3be499b46023556279c3d5714251af'},\
-# 								{'serial':'28-000005c80eb9','location':'Backyard','token':'LJOXm62F8)OXRBMkkB','id':'df3026af6d7d123f5df440b365dfc888'} 
-
-# 	if account_name=="smart.lehotsky.house@gmail.com":
-# 		orgId="j5h59u"
-# 		ds18b20_sensor_dict=    {'serial':'28-000005c6894a','location':'Basement RPi cabinet', 'token':'Ay(*g3zibFHGFSk8M('},\
-# 								{'serial':'28-000005c77fc7','location':'Driveway','token':'srjfF&RXvDU7+qoYly'},\
-# 								{'serial':'28-000005c685ba','location':'Kitchen','token':'9S8Y9rOA(bZnEMAB)9'},\
-# 								{'serial':'28-000005c7ed65','location':'Basement outside RPi cabinet','token':'6lw!UIjk&DAi27CaA&'},\
-# 								{'serial':'28-000005c6ba08','location':'Garage', 'token':'Y)SZpqT@HxKkvwWMZ8'},\
-# 								{'serial':'28-000005c7ce08','location':'Familyroom','token':'yTS0f(Fi3)(ewKhJzG'},\
-# 								{'serial':'28-000005c6e555','location':'Water Heater','token':'@x0CWfiM*-EH-mSIr@'},\
-# 								{'serial':'28-000005c80eb9','location':'Backyard','token':'+D-)E4qlVNvwtxiJx&'} 
-
-# 	return account_name, orgId, ds18b20_sensor_dict
-
 def eventPublishCallback():
 	print("\nCLOUDANT PUBLISHED\n")
 	#
@@ -514,10 +469,6 @@ def read_high_low_day_temp(location, USERNAME, PASSWORD, URL):
 	###### DATA for EVENING update email ####
 	#########################################
 
-	# USERNAME = cloud_acct_username
-	# PASSWORD = cloud_acct_pword
-	# URL=cloud_act_url
-
 	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	client.connect()
 
@@ -551,10 +502,6 @@ def read_high_low_night_temp(location, USERNAME, PASSWORD, URL):
 	#########################################
 	###### DATA for MORNING update email ####
 	#########################################
-
-	# USERNAME = cloud_acct_username
-	# PASSWORD = cloud_acct_pword
-	# URL=cloud_act_url
 
 	try:
 		client = Cloudant(USERNAME, PASSWORD, url = URL )
@@ -624,10 +571,6 @@ def read_high_low_night_temp(location, USERNAME, PASSWORD, URL):
 
 def read_status_from_cloudant(device_id,field, USERNAME, PASSWORD, URL):
 
-	# USERNAME = cloud_acct_username
-	# PASSWORD = cloud_acct_pword
-	# URL=cloud_act_url
-
 
 	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	client.connect()
@@ -638,9 +581,6 @@ def read_status_from_cloudant(device_id,field, USERNAME, PASSWORD, URL):
 
 	return current_temp,current_time
 def backyard_read_temp_from_cloudant(device_id, USERNAME, PASSWORD, URL):
-	# USERNAME = cloud_acct_username
-	# PASSWORD = cloud_acct_pword
-	# URL=cloud_act_url
 
 	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	client.connect()
@@ -653,9 +593,6 @@ def backyard_read_temp_from_cloudant(device_id, USERNAME, PASSWORD, URL):
 	return current_temp,current_time
 
 def build_status_dict(USERNAME, PASSWORD, URL):
-	# USERNAME = cloud_acct_username
-	# PASSWORD = cloud_acct_pword
-	# URL=cloud_act_url
 
 	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	client.connect()
@@ -892,14 +829,7 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 		print ("Sensor =",cur_sensor, "temp is:", cur_temp,"sensor location is:", cur_local)
 		print ("the cloundat id for this is:",cur_id)
 		evening_report_sent=True
-		#logging.info("Sensor = %s temp is: %s sensor location is: %s",cur_sensor, cur_temp, cur_local)
 
-		# print "sensor ID = ",sensor_file, "that has the temperature of:", read_temp(),\
-		#  " this sensor is located at the: ", row['location']
-
-		### send data to analytics sub routine:
-
-		#temp_analytics(cur_sensor, cur_local, cur_temp, beginning_of_day)
 		try:
 			write_to_cloudant(cur_sensor, cur_local, cur_temp,cloudant_username, cloud_acct_pword, cloud_act_url)
 		except:
