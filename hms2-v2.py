@@ -20,7 +20,7 @@ from cloudant.error import ResultException
 ####################################
 def get_user_data():
 	user_data = {}
-	with open("user_data.txt") as f:
+	with open("/home/pi/hms/user_data.txt") as f:
 		for line in f:
 			(field, val) = line.split()
 			user_data[field] = val
@@ -196,50 +196,50 @@ def edit_cloudant_system_status_doc(s, v, USERNAME, PASSWORD, URL):
 	my_document.save()
 	print ('\n\n************** system table updated************ read cycle:',read_cycles,'\n\n')
 
-def pickaccount():
+# def pickaccount():
 
 
-	print("*************************************************************************")
-	print("****       1.   tlehotsky@gmail.com                                   ***")
-	print("****                                                                  ***")
-	print("****       2.   smart.lehotsky.house@gmail.com                        ***")
-	print("*************************************************************************")
-	print("\n")
+# 	print("*************************************************************************")
+# 	print("****       1.   tlehotsky@gmail.com                                   ***")
+# 	print("****                                                                  ***")
+# 	print("****       2.   smart.lehotsky.house@gmail.com                        ***")
+# 	print("*************************************************************************")
+# 	print("\n")
 
 
-	#acct=input("enter 1 or 2: ")
-	acct=1
+# 	#acct=input("enter 1 or 2: ")
+# 	acct=1
 
-	if acct==1:
-		account_name="tlehotsky@gmail.com"
-	else:
-		account_name="smart.lehotsky.house@gmail.com"
+# 	if acct==1:
+# 		account_name="tlehotsky@gmail.com"
+# 	else:
+# 		account_name="smart.lehotsky.house@gmail.com"
 
 
 
-	if account_name=="tlehotsky@gmail.com":
-		orgId="rdj4wy"
-		ds18b20_sensor_dict=    {'serial':'28-000005c6894a','location':'Basement RPi cabinet', 'token':'9CvY*mQZwV0Kf7792c','id':'ff02dab2420c92e6a664e0cb2252da16'},\
-								{'serial':'28-000005c77fc7','location':'Driveway','token':'YEZPv9m0x1FY6L6byX','id':'4b72bb5e1b0d3c9981a8a92b9f7022c1'},\
-								{'serial':'28-000005c685ba','location':'Kitchen','token':'3kQaAEj0!u*SIGyP(1','id':'d0adb1c0be3c69f3c9135fb1441886fb'},\
-								{'serial':'28-000005c7ed65','location':'Basement outside RPi cabinet','token':'zr@+Kp2@pRLS1+h?sf','id':'0a7e3e128eaad5f9ab828b8c16bfaa09'},\
-								{'serial':'28-000005c6ba08','location':'Garage', 'token':'Ljq*jt?EeCRfxbRare','id':'ccad5a0c4449b0e57dd0bd889ef6207c'},\
-								{'serial':'28-000005c7ce08','location':'Familyroom','token':'Tdez_RuWsF(sbOX3tB','id':'4b72bb5e1b0d3c9981a8a92b9f6f6608'},\
-								{'serial':'28-000005c6e555','location':'Water Heater','token':'2+5Oxwa4ms5@d+Vu(A','id':'9e3be499b46023556279c3d5714251af'},\
-								{'serial':'28-000005c80eb9','location':'Backyard','token':'LJOXm62F8)OXRBMkkB','id':'df3026af6d7d123f5df440b365dfc888'} 
+# 	if account_name=="tlehotsky@gmail.com":
+# 		orgId="rdj4wy"
+# 		ds18b20_sensor_dict=    {'serial':'28-000005c6894a','location':'Basement RPi cabinet', 'token':'9CvY*mQZwV0Kf7792c','id':'ff02dab2420c92e6a664e0cb2252da16'},\
+# 								{'serial':'28-000005c77fc7','location':'Driveway','token':'YEZPv9m0x1FY6L6byX','id':'4b72bb5e1b0d3c9981a8a92b9f7022c1'},\
+# 								{'serial':'28-000005c685ba','location':'Kitchen','token':'3kQaAEj0!u*SIGyP(1','id':'d0adb1c0be3c69f3c9135fb1441886fb'},\
+# 								{'serial':'28-000005c7ed65','location':'Basement outside RPi cabinet','token':'zr@+Kp2@pRLS1+h?sf','id':'0a7e3e128eaad5f9ab828b8c16bfaa09'},\
+# 								{'serial':'28-000005c6ba08','location':'Garage', 'token':'Ljq*jt?EeCRfxbRare','id':'ccad5a0c4449b0e57dd0bd889ef6207c'},\
+# 								{'serial':'28-000005c7ce08','location':'Familyroom','token':'Tdez_RuWsF(sbOX3tB','id':'4b72bb5e1b0d3c9981a8a92b9f6f6608'},\
+# 								{'serial':'28-000005c6e555','location':'Water Heater','token':'2+5Oxwa4ms5@d+Vu(A','id':'9e3be499b46023556279c3d5714251af'},\
+# 								{'serial':'28-000005c80eb9','location':'Backyard','token':'LJOXm62F8)OXRBMkkB','id':'df3026af6d7d123f5df440b365dfc888'} 
 
-	if account_name=="smart.lehotsky.house@gmail.com":
-		orgId="j5h59u"
-		ds18b20_sensor_dict=    {'serial':'28-000005c6894a','location':'Basement RPi cabinet', 'token':'Ay(*g3zibFHGFSk8M('},\
-								{'serial':'28-000005c77fc7','location':'Driveway','token':'srjfF&RXvDU7+qoYly'},\
-								{'serial':'28-000005c685ba','location':'Kitchen','token':'9S8Y9rOA(bZnEMAB)9'},\
-								{'serial':'28-000005c7ed65','location':'Basement outside RPi cabinet','token':'6lw!UIjk&DAi27CaA&'},\
-								{'serial':'28-000005c6ba08','location':'Garage', 'token':'Y)SZpqT@HxKkvwWMZ8'},\
-								{'serial':'28-000005c7ce08','location':'Familyroom','token':'yTS0f(Fi3)(ewKhJzG'},\
-								{'serial':'28-000005c6e555','location':'Water Heater','token':'@x0CWfiM*-EH-mSIr@'},\
-								{'serial':'28-000005c80eb9','location':'Backyard','token':'+D-)E4qlVNvwtxiJx&'} 
+# 	if account_name=="smart.lehotsky.house@gmail.com":
+# 		orgId="j5h59u"
+# 		ds18b20_sensor_dict=    {'serial':'28-000005c6894a','location':'Basement RPi cabinet', 'token':'Ay(*g3zibFHGFSk8M('},\
+# 								{'serial':'28-000005c77fc7','location':'Driveway','token':'srjfF&RXvDU7+qoYly'},\
+# 								{'serial':'28-000005c685ba','location':'Kitchen','token':'9S8Y9rOA(bZnEMAB)9'},\
+# 								{'serial':'28-000005c7ed65','location':'Basement outside RPi cabinet','token':'6lw!UIjk&DAi27CaA&'},\
+# 								{'serial':'28-000005c6ba08','location':'Garage', 'token':'Y)SZpqT@HxKkvwWMZ8'},\
+# 								{'serial':'28-000005c7ce08','location':'Familyroom','token':'yTS0f(Fi3)(ewKhJzG'},\
+# 								{'serial':'28-000005c6e555','location':'Water Heater','token':'@x0CWfiM*-EH-mSIr@'},\
+# 								{'serial':'28-000005c80eb9','location':'Backyard','token':'+D-)E4qlVNvwtxiJx&'} 
 
-	return account_name, orgId, ds18b20_sensor_dict
+# 	return account_name, orgId, ds18b20_sensor_dict
 
 def eventPublishCallback():
 	print("\nCLOUDANT PUBLISHED\n")
@@ -708,6 +708,17 @@ cloud_acct_API_key= user_data['cloud_acct_API_key']
 gmail_user= user_data['gmail_user']
 gmail_password= user_data['gmail_password']
 cloudant_username=user_data['cloud_acct_username']
+orgId=user_data['cloud_org_ID']
+account_name=user_data['cloud_top_level_account_username']
+
+ds18b20_sensor_dict=    {'serial':'28-000005c6894a','location':'Basement RPi cabinet', 'token':'9CvY*mQZwV0Kf7792c','id':'ff02dab2420c92e6a664e0cb2252da16'},\
+						{'serial':'28-000005c77fc7','location':'Driveway','token':'YEZPv9m0x1FY6L6byX','id':'4b72bb5e1b0d3c9981a8a92b9f7022c1'},\
+						{'serial':'28-000005c685ba','location':'Kitchen','token':'3kQaAEj0!u*SIGyP(1','id':'d0adb1c0be3c69f3c9135fb1441886fb'},\
+						{'serial':'28-000005c7ed65','location':'Basement outside RPi cabinet','token':'zr@+Kp2@pRLS1+h?sf','id':'0a7e3e128eaad5f9ab828b8c16bfaa09'},\
+						{'serial':'28-000005c6ba08','location':'Garage', 'token':'Ljq*jt?EeCRfxbRare','id':'ccad5a0c4449b0e57dd0bd889ef6207c'},\
+						{'serial':'28-000005c7ce08','location':'Familyroom','token':'Tdez_RuWsF(sbOX3tB','id':'4b72bb5e1b0d3c9981a8a92b9f6f6608'},\
+						{'serial':'28-000005c6e555','location':'Water Heater','token':'2+5Oxwa4ms5@d+Vu(A','id':'9e3be499b46023556279c3d5714251af'},\
+						{'serial':'28-000005c80eb9','location':'Backyard','token':'LJOXm62F8)OXRBMkkB','id':'df3026af6d7d123f5df440b365dfc888'} 
 
 
 base_dir = '/sys/bus/w1/devices/'
@@ -787,7 +798,11 @@ write_to_log("Program started at" + str(RecTime())+" on " + str(RecDate()))
 # logging.info('\n')
 print ("The number of online sensors is: ", len(glob.glob("28*")),)
 write_to_log("The number of online sensors is: " + str(len(glob.glob("28*"))))
-account_name, orgId, ds18b20_sensor_dict=pickaccount()
+
+
+
+# account_name, orgId, ds18b20_sensor_dict=pickaccount()
+
 print ("\n")
 print ("Your account name is:", account_name)
 write_to_log("Your account name is: "+ account_name)
