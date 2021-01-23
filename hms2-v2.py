@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding:UTF-8 -*-
 
-
+#git update 1/23/2021
 import os, shutil, glob, time, subprocess, re, sys, sqlite3, logging, smtplib
 import RPi.GPIO as GPIO
 from datetime import timedelta
