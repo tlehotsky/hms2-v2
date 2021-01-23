@@ -56,12 +56,12 @@ Subject: %s
 	    server.close()
 
 	    print ("Email sent!")
-	    write_to_log('email sent with subject')
-	    write_to_log(body)
+	    write_to_log('email sent with subject', cloudant_username, cloud_acct_pword, cloud_act_url)
+	    write_to_log(body, cloudant_username, cloud_acct_pword, cloud_act_url)
 	except:
 	    print ("Something went wrong")
-	    write_to_Error_log("error sending email, what follows is the message body")
-	    write_to_Error_log(body)
+	    write_to_Error_log("error sending email, what follows is the message body", cloudant_username, cloud_acct_pword, cloud_act_url)
+	    write_to_Error_log(body, cloudant_username, cloud_acct_pword, cloud_act_url)
 	    time.sleep(10)
 
 def send_email(subject,body,gmail_user,gmail_password):
@@ -89,12 +89,12 @@ Subject: %s
 	    server.close()
 
 	    print ("Email sent!")
-	    write_to_log('email sent with subject')
-	    write_to_log(body)
+	    write_to_log('email sent with subject', cloudant_username, cloud_acct_pword, cloud_act_url)
+	    write_to_log(body, cloudant_username, cloud_acct_pword, cloud_act_url)
 	except:
 	    print ("Something went wrong")
-	    write_to_Error_log("error sending email, what follows is the message body")
-	    write_to_Error_log(body)
+	    write_to_Error_log("error sending email, what follows is the message body", cloudant_username, cloud_acct_pword, cloud_act_url)
+	    write_to_Error_log(body, cloudant_username, cloud_acct_pword, cloud_act_url)
 	    time.sleep(10)
 
 def write_door_position_to_cloudant(door_name, door_position,USERNAME,PASSWORD,URL):
@@ -135,14 +135,14 @@ def write_to_cloudant(sensor_id, local, temp,USERNAME, PASSWORD, URL):
 		client.connect()
 
 	except:
-		write_to_Error_log("error connecting to cloudant TEMP database, will sleep for 30 seconds and then try again")
+		write_to_Error_log("error connecting to cloudant TEMP database, will sleep for 30 seconds and then try again", cloudant_username, cloud_acct_pword, cloud_act_url)
 		time.sleep(30)
 
 		try:
 			client.connect()
 
 		except:
-			write_to_Error_log("2nd error in a row connecting to cloudant TEMP database, will sleep for 5 minute and then skip")
+			write_to_Error_log("2nd error in a row connecting to cloudant TEMP database, will sleep for 5 minute and then skip", cloudant_username, cloud_acct_pword, cloud_act_url)
 			time.sleep(300)
 			return
 
@@ -159,12 +159,12 @@ def write_to_cloudant(sensor_id, local, temp,USERNAME, PASSWORD, URL):
 	try:
 		new_document = my_database.create_document(json_document)
 	except:
-		write_to_Error_log("error writting new database document, will wait 30 seconds and try again")
+		write_to_Error_log("error writting new database document, will wait 30 seconds and try again", cloudant_username, cloud_acct_pword, cloud_act_url)
 		time.sleep(30)
 		try:
 			new_document = my_database.create_document(json_document)
 		except:
-			write_to_Error_log("2nd error in a row writting new database document, will wait 5 minutes and then skip")
+			write_to_Error_log("2nd error in a row writting new database document, will wait 5 minutes and then skip", cloudant_username, cloud_acct_pword, cloud_act_url)
 			return
 	client.disconnect()
 
@@ -179,12 +179,12 @@ def edit_cloudant_system_status_doc(s, v, USERNAME, PASSWORD, URL):
 	try:
 		client.connect()
 	except:
-		write_to_Error_log("error connecting to cloudant System Status database, will sleep for 30 seconds and then try again")
+		write_to_Error_log("error connecting to cloudant System Status database, will sleep for 30 seconds and then try again", cloudant_username, cloud_acct_pword, cloud_act_url)
 		time.sleep(30)
 		try:
 			client.connect()
 		except:
-			write_to_Error_log("2nd error in a row connecting to cloudant System Status database, will sleep for 5 minute and then skip")
+			write_to_Error_log("2nd error in a row connecting to cloudant System Status database, will sleep for 5 minute and then skip", cloudant_username, cloud_acct_pword, cloud_act_url)
 			time.sleep(300)
 			return
 	my_database = client["system_status"]
@@ -219,26 +219,26 @@ def write_to_iot_platform(OrgId, sensor_id, token, temp):
 	try:
 		client.connect()
 	except:
-		write_to_Error_log("error connecting to IBM Watson IoT, waiting 30 seconds then trying again")
+		write_to_Error_log("error connecting to IBM Watson IoT, waiting 30 seconds then trying again", cloudant_username, cloud_acct_pword, cloud_act_url)
 		time.sleep(30)
 
 		try:
 			client.connect()
 		except:
-			write_to_Error_log("2nd error in a row connecting to IBM Watson IoT, waiting 5 minutes then skipping")
+			write_to_Error_log("2nd error in a row connecting to IBM Watson IoT, waiting 5 minutes then skipping", cloudant_username, cloud_acct_pword, cloud_act_url)
 			time.sleep(300)
 			return
 	try:
 		client.publishEvent(eventId="status", msgFormat="json", data={"Temp":temp}, qos=0, onPublish=eventPublishCallback())
 
 	except:
-		write_to_Error_log("error writting to IBM Watson IoT after establishing a connect, waiting 30 seconds then trying again")
+		write_to_Error_log("error writting to IBM Watson IoT after establishing a connect, waiting 30 seconds then trying again", cloudant_username, cloud_acct_pword, cloud_act_url)
 		time.sleep(30)
 
 		try:
 			client.publishEvent(eventId="status", msgFormat="json", data={"Temp":temp}, qos=0, onPublish=eventPublishCallback())
 		except:
-			write_to_Error_log("2nd error in a row writting to IBM Watson IoT after successfully connect, waiting 5 minutes then skipping")
+			write_to_Error_log("2nd error in a row writting to IBM Watson IoT after successfully connect, waiting 5 minutes then skipping", cloudant_username, cloud_acct_pword, cloud_act_url)
 			time.sleep(300)
 			return
 
@@ -326,7 +326,7 @@ def read_temp():
 			print ("Error reading ds18b20 sensor,sleeping for 10 seconds")
 			time.sleep(10)
 			ds18b20_error_count=ds18b20_error_count+1
-			write_to_Error_log("ERROR reading DS18B20 sensor")
+			write_to_Error_log("ERROR reading DS18B20 sensor", cloudant_username, cloud_acct_pword, cloud_act_url)
 			
 	#print ("final temp is", temp_total/temp_read_cycles)
 	return round((temp_total/temp_read_cycles),1)
@@ -340,8 +340,8 @@ def write_to_log(text, USERNAME, PASSWORD, URL):
 	# f.write(msg)
 	# f.close()
 
-	DATABASE_NAME="log"
-	client = Cloudant(USERNAME,PASSWORD, url = URL )
+	DATABASE_NAME="log" 
+	client = Cloudant(USERNAME, PASSWORD, url = URL )
 
 	my_database = client[DATABASE_NAME]
 
