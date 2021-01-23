@@ -35,13 +35,9 @@ def get_user_data():
 	return user_data
 
 def send_html_email(subject,body,gmail_user,gmail_password):
-	# gmail_user = "smart.lehotsky.house@gmail.com"
-	# gmail_password = "27Kovelov"
 
 	sent_from = gmail_user
 	to = ["tim.lehotsky@wsp.com"]
-	#subject = "3 Whoa Update from your SMART house"
-	#body = "Hey, whats up?\n\n- You"
 
 	email_text = """\
 Content-Type: "text/html"
@@ -69,8 +65,7 @@ Subject: %s
 	    time.sleep(10)
 
 def send_email(subject,body,gmail_user,gmail_password):
-	# gmail_user = "smart.lehotsky.house@gmail.com"
-	# gmail_password = "27Kovelov"
+
 
 	sent_from = gmail_user
 	to = ["tim.lehotsky@wsp.com"]
@@ -102,12 +97,12 @@ Subject: %s
 	    write_to_Error_log(body)
 	    time.sleep(10)
 
-def write_door_position_to_cloudant(door_name, door_position):
-	ACCOUNT_NAME=global cloud_acct_org_name
-	USERNAME = global cloudant_username
-	PASSWORD = global cloud_acct_pword
-	URL=global cloud_act_url
-	API_KEY=global cloud_acct_API_key
+def write_door_position_to_cloudant(door_name, door_position,USERNAME,PASSWORD,URL):
+	# ACCOUNT_NAME= cloud_acct_org_name
+	# USERNAME =  cloudant_username
+	# PASSWORD =  cloud_acct_pword
+	# URL= cloud_act_url
+	# API_KEY= cloud_acct_API_key
 	DATABASE_NAME="door_position"
 	#print ("sub to write data to cloudant - SENSOR ID = ", sensor_id, "LOCATION = ", local, "TEMP = ", temp)
 
@@ -125,12 +120,12 @@ def write_door_position_to_cloudant(door_name, door_position):
 	new_document = my_database.create_document(json_document)
 	client.disconnect()
 
-def write_to_cloudant(sensor_id, local, temp):
-	ACCOUNT_NAME=global cloud_acct_org_name
-	USERNAME = global cloudant_username
-	PASSWORD = global cloud_acct_pword
-	URL=global cloud_act_url
-	API_KEY=global cloud_acct_API_key
+def write_to_cloudant(sensor_id, local, temp,USERNAME, PASSWORD, URL):
+	# ACCOUNT_NAME= cloud_acct_org_name
+	# USERNAME =  cloudant_username
+	# PASSWORD =  cloud_acct_pword
+	# URL= cloud_act_url
+	# API_KEY= cloud_acct_API_key
 	DATABASE_NAME="temps"
 	print ("sub to write data to cloudant - SENSOR ID = ", sensor_id, "LOCATION = ", local, "TEMP = ", temp)
 
@@ -173,10 +168,10 @@ def write_to_cloudant(sensor_id, local, temp):
 			return
 	client.disconnect()
 
-def edit_cloudant_system_status_doc(s,v):
-	USERNAME = global cloud_acct_username
-	PASSWORD = global cloud_acct_pword
-	URL = cloud_act_url
+def edit_cloudant_system_status_doc(s, v, USERNAME, PASSWORD, URL):
+	# USERNAME = cloud_acct_username
+	# PASSWORD = cloud_acct_pword
+	# URL = cloud_act_url
 
 	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	#client.connect()
@@ -513,15 +508,15 @@ def temp_analytics(sensor_id, local, temp, beginning_of_day):
 
 		print ("")
 
-def read_high_low_day_temp(location):
+def read_high_low_day_temp(location, USERNAME, PASSWORD, URL):
 
 	#########################################
 	###### DATA for EVENING update email ####
 	#########################################
 
-	USERNAME = global cloud_acct_username
-	PASSWORD = global cloud_acct_pword
-	URL=cloud_act_url
+	# USERNAME = cloud_acct_username
+	# PASSWORD = cloud_acct_pword
+	# URL=cloud_act_url
 
 	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	client.connect()
@@ -551,18 +546,25 @@ def read_high_low_day_temp(location):
 
 	return msg
 
-def read_high_low_night_temp(location):
+def read_high_low_night_temp(location, USERNAME, PASSWORD, URL):
 
 	#########################################
 	###### DATA for MORNING update email ####
 	#########################################
 
-	USERNAME = global cloud_acct_username
-	PASSWORD = global cloud_acct_pword
-	URL=cloud_act_url
+	# USERNAME = cloud_acct_username
+	# PASSWORD = cloud_acct_pword
+	# URL=cloud_act_url
 
-	client = Cloudant(USERNAME,PASSWORD, url = URL )
-	client.connect()
+	try:
+		client = Cloudant(USERNAME, PASSWORD, url = URL )
+		client.connect()
+
+	except:
+		print ('error connecting to cloudant')
+		msg=' read_high_low_day_temp '
+		return msg
+
 	# location='Backyard'
 	cur_date=dt.datetime.now()
 	print ('the current date is', cur_date)
@@ -620,11 +622,11 @@ def read_high_low_night_temp(location):
 	return message
 
 
-def read_status_from_cloudant(device_id,field):
+def read_status_from_cloudant(device_id,field, USERNAME, PASSWORD, URL):
 
-	USERNAME = global cloud_acct_username
-	PASSWORD = global cloud_acct_pword
-	URL=cloud_act_url
+	# USERNAME = cloud_acct_username
+	# PASSWORD = cloud_acct_pword
+	# URL=cloud_act_url
 
 
 	client = Cloudant(USERNAME,PASSWORD, url = URL )
@@ -635,10 +637,10 @@ def read_status_from_cloudant(device_id,field):
 
 
 	return current_temp,current_time
-def backyard_read_temp_from_cloudant(device_id):
-	USERNAME = global cloud_acct_username
-	PASSWORD = global cloud_acct_pword
-	URL=cloud_act_url
+def backyard_read_temp_from_cloudant(device_id, USERNAME, PASSWORD, URL):
+	# USERNAME = cloud_acct_username
+	# PASSWORD = cloud_acct_pword
+	# URL=cloud_act_url
 
 	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	client.connect()
@@ -650,6 +652,20 @@ def backyard_read_temp_from_cloudant(device_id):
 
 	return current_temp,current_time
 
+def build_status_dict(USERNAME, PASSWORD, URL):
+	# USERNAME = cloud_acct_username
+	# PASSWORD = cloud_acct_pword
+	# URL=cloud_act_url
+
+	client = Cloudant(USERNAME,PASSWORD, url = URL )
+	client.connect()
+	my_database = client["system_status"]
+	local_status_dict=[]
+	for doc in my_database:
+		local_status_dict.append(doc)
+
+	return local_status_dict
+
 def evening_report(errors, reads):
 	eol="\r\r\n"
 	temp_base_dir = '/sys/bus/w1/devices/'
@@ -660,7 +676,7 @@ def evening_report(errors, reads):
 	message=message+"ds18b20 errors = " + str(ds18b20_error_count)+"\r"
 
 
-	status_dict=build_status_dict() 
+	status_dict=build_status_dict(cloudant_username, cloud_acct_pword, cloud_act_url) 
 	for row in status_dict:
 		if row['l']=='Garage overhead':
 			message=message+"Garage overhead door is: "+row['v']+eol
@@ -676,19 +692,7 @@ def evening_report(errors, reads):
 	print(message)
 	send_html_email('evening report', message, gmail_user,gmail_password)
 
-def build_status_dict():
-	USERNAME = global cloud_acct_username
-	PASSWORD = global cloud_acct_pword
-	URL=cloud_act_url
 
-	client = Cloudant(USERNAME,PASSWORD, url = URL )
-	client.connect()
-	my_database = client["system_status"]
-	local_status_dict=[]
-	for doc in my_database:
-		local_status_dict.append(doc)
-
-	return local_status_dict
 	
 
 ####################################
@@ -696,7 +700,7 @@ def build_status_dict():
 ####################################
 
 
-get_user_data()
+user_data=get_user_data()
 cloud_acct_org_name =user_data['cloud_acct_org_name']
 cloud_acct_pword=user_data['cloud_acct_pword']
 cloud_act_url= user_data['cloud_act_url']
@@ -798,37 +802,42 @@ write_to_log("Your Organization Id is: " + orgId)
 
 while day_of_year == dt.datetime.now().timetuple().tm_yday:
 
-	if dt.datetime.now().hour>7 and morning_report_sent == False and read_cycles>1:
+	if dt.datetime.now().hour>7 and morning_report_sent == False and read_cycles>0:
 
 		try:
-			msg1= read_high_low_night_temp("Backyard")
+			msg1= read_high_low_night_temp("Backyard", cloudant_username, cloud_acct_pword, cloud_act_url)
 			morning_report_sent=True
 		except:
 			print ("error reading high/low temps, sleeping 30 seconds to let error flush")
 			time.sleep(30)
 			error_count+=1
 		
-		try:
-			msg2=read_high_low_night_temp("Driveway")
-			morning_report_sent=True
-		except:
-			print ("error reading high/low temps, sleeping 30 seconds to let error flush")
-			time.sleep(30)
-			error_count+=1
-			morning_report_sent=True
+		msg2=read_high_low_night_temp("Driveway",cloudant_username, cloud_acct_pword, cloud_act_url)
+		morning_report_sent=True
+
+
+
+
+		# try:
+
+		# except:
+		# 	print ("error reading high/low temps, sleeping 30 seconds to let error flush")
+		# 	time.sleep(30)
+		# 	error_count+=1
+		# 	morning_report_sent=True
 
 
 		try:
 			# send_email('morning update',msg1 + "\n" + msg2)
 			# morning_report_sent=True
 			print ("prepping morning message")
-			msg1=read_high_low_night_temp("Backyard")
-			msg2=read_high_low_night_temp("Driveway")
+			msg1=read_high_low_night_temp("Backyard", cloudant_username, cloud_acct_pword, cloud_act_url)
+			msg2=read_high_low_night_temp("Driveway", cloudant_username, cloud_acct_pword, cloud_act_url)
 			message=msg1+"\r\r\n"+msg2
 			# print (message)
 			backyard_device_id="df3026af6d7d123f5df440b365dfc888"
 
-			backyard_temp, backyard_temp_time=backyard_read_temp_from_cloudant(backyard_device_id)
+			backyard_temp, backyard_temp_time=backyard_read_temp_from_cloudant(backyard_device_id, cloudant_username, cloud_acct_pword, cloud_act_url)
 
 			subject="at " +str(backyard_temp_time)+" the backyard temp was: "+str(backyard_temp)
 			# print (subject)
@@ -877,20 +886,20 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 
 		#temp_analytics(cur_sensor, cur_local, cur_temp, beginning_of_day)
 		try:
-			write_to_cloudant(cur_sensor, cur_local, cur_temp)
+			write_to_cloudant(cur_sensor, cur_local, cur_temp,cloudant_username, cloud_acct_pword, cloud_act_url)
 		except:
 			write_to_Error_log("error writting temperature to cloudant, waiting 30 seconds then retrying")
 			time.sleep(30)
 			error_count+=1
 
 			try:
-				write_to_cloudant(cur_sensor, cur_local, cur_temp)
+				write_to_cloudant(cur_sensor, cur_local, cur_temp, cloudant_username, cloud_acct_pword, cloud_act_url)
 			except:
 				write_to_Error_log("2nd error in a row writting to cloundant, sleeping 5 minuts then skipping")
 				time.sleep(300)
 				error_count+=1
 
-		edit_cloudant_system_status_doc(row['id'] ,cur_temp)
+		edit_cloudant_system_status_doc(row['id'] ,cur_temp, cloudant_username, cloud_acct_pword, cloud_act_url)
 
 
 		if skip_IoT==False:
@@ -947,13 +956,13 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 
 		# print ("writing to cloudant")
 		try:
-			write_door_position_to_cloudant(curDoor_name, cur_door_status)
+			write_door_position_to_cloudant(curDoor_name, cur_door_status, cloudant_username, cloud_acct_pword, cloud_act_url)
 		except:
 			write_to_log("error writing door position to cloudant, sleeping for 30 seconds then re-trying")
 			error_count+=1
 
 			try:
-				write_door_position_to_cloudant(curDoor_name, cur_door_status)
+				write_door_position_to_cloudant(curDoor_name, cur_door_status, cloudant_username, cloud_acct_pword, cloud_act_url)
 
 			except:
 				write_to_log("2nd error in a row writing door position to cloudant, sleeping for 5 minutes then skipping")
