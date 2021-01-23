@@ -18,10 +18,25 @@ from cloudant.error import ResultException
 ####################################
 ######## FUNCTIONS #################
 ####################################
+def get_user_data():
+	user_data = {}
+	with open("user_data.txt") as f:
+		for line in f:
+			(field, val) = line.split()
+			user_data[field] = val
 
-def send_html_email(subject,body):
-	gmail_user = "smart.lehotsky.house@gmail.com"
-	gmail_password = "27Kovelov"
+	print ("cloudant organization name = ", user_data['cloud_acct_org_name'])
+	print ("cloudant account password = ", user_data['cloud_acct_pword'])
+	print ("cloudant account URL = ", user_data['cloud_act_url'])
+	print ("cloudant account API key = ", user_data['cloud_acct_API_key'])
+	print ("gmail user account name = ",user_data['gmail_user'])
+	print ("gmail user password = ",user_data['gmail_password'])
+	print ("cloudant username = ",user_data['cloud_acct_username'])
+	return user_data
+
+def send_html_email(subject,body,gmail_user,gmail_password):
+	# gmail_user = "smart.lehotsky.house@gmail.com"
+	# gmail_password = "27Kovelov"
 
 	sent_from = gmail_user
 	to = ["tim.lehotsky@wsp.com"]
@@ -53,9 +68,9 @@ Subject: %s
 	    write_to_Error_log(body)
 	    time.sleep(10)
 
-def send_email(subject,body):
-	gmail_user = "smart.lehotsky.house@gmail.com"
-	gmail_password = "27Kovelov"
+def send_email(subject,body,gmail_user,gmail_password):
+	# gmail_user = "smart.lehotsky.house@gmail.com"
+	# gmail_password = "27Kovelov"
 
 	sent_from = gmail_user
 	to = ["tim.lehotsky@wsp.com"]
@@ -88,15 +103,15 @@ Subject: %s
 	    time.sleep(10)
 
 def write_door_position_to_cloudant(door_name, door_position):
-	ACCOUNT_NAME="f7thsh"
-	USERNAME = "8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix"
-	PASSWORD = "006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf"
-	URL="https://8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix:006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf@8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix.cloudantnosqldb.appdomain.cloud"
-	API_KEY="ZQPyqA9l8NAthQQ55_G5gneILma__jiP4JUOBdh8nQog"
+	ACCOUNT_NAME=global cloud_acct_org_name
+	USERNAME = global cloudant_username
+	PASSWORD = global cloud_acct_pword
+	URL=global cloud_act_url
+	API_KEY=global cloud_acct_API_key
 	DATABASE_NAME="door_position"
 	#print ("sub to write data to cloudant - SENSOR ID = ", sensor_id, "LOCATION = ", local, "TEMP = ", temp)
 
-	client = Cloudant(USERNAME,PASSWORD, url = "https://8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix:006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf@8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix.cloudantnosqldb.appdomain.cloud" )
+	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	client.connect()
 	my_database = client[DATABASE_NAME]
 
@@ -111,15 +126,15 @@ def write_door_position_to_cloudant(door_name, door_position):
 	client.disconnect()
 
 def write_to_cloudant(sensor_id, local, temp):
-	ACCOUNT_NAME="f7thsh"
-	USERNAME = "8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix"
-	PASSWORD = "006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf"
-	URL="https://8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix:006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf@8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix.cloudantnosqldb.appdomain.cloud"
-	API_KEY="ZQPyqA9l8NAthQQ55_G5gneILma__jiP4JUOBdh8nQog"
+	ACCOUNT_NAME=global cloud_acct_org_name
+	USERNAME = global cloudant_username
+	PASSWORD = global cloud_acct_pword
+	URL=global cloud_act_url
+	API_KEY=global cloud_acct_API_key
 	DATABASE_NAME="temps"
 	print ("sub to write data to cloudant - SENSOR ID = ", sensor_id, "LOCATION = ", local, "TEMP = ", temp)
 
-	client = Cloudant(USERNAME,PASSWORD, url = "https://8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix:006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf@8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix.cloudantnosqldb.appdomain.cloud" )
+	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	
 	try:
 		client.connect()
@@ -159,10 +174,11 @@ def write_to_cloudant(sensor_id, local, temp):
 	client.disconnect()
 
 def edit_cloudant_system_status_doc(s,v):
-	USERNAME = "8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix"
-	PASSWORD = "006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf"
+	USERNAME = global cloud_acct_username
+	PASSWORD = global cloud_acct_pword
+	URL = cloud_act_url
 
-	client = Cloudant(USERNAME,PASSWORD, url = "https://8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix:006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf@8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix.cloudantnosqldb.appdomain.cloud" )
+	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	#client.connect()
 
 	try:
@@ -369,7 +385,6 @@ def read_temp():
 def write_to_log(text):
 	msg=" STATUS Date:"+ str(RecDate()) + " AT TIME: "+ str(RecTime())+": "+ str(text)+str('\n')
 	print ("Writting to LOG file:", msg)
-	# os.chdir("")
 	log_txt_file="/home/pi/hms/" + str(RecDate())+"-HMS-log.txt"
 	f=open(log_txt_file, 'a')
 	f.write(msg)
@@ -378,7 +393,6 @@ def write_to_log(text):
 def write_to_Error_log(text):
 	msg="ERROR - Date:"+ str(RecDate()) + " AT TIME: "+ str(RecTime())+": "+ str(text)+str('\n')
 	print ("Writting to ERROR LOG file:", msg)
-	# os.chdir("")
 	log_txt_file="/home/pi/hms/" + str(RecDate())+"-HMS-log.txt"
 	f=open(log_txt_file, 'a')
 	f.write(msg)
@@ -505,12 +519,12 @@ def read_high_low_day_temp(location):
 	###### DATA for EVENING update email ####
 	#########################################
 
-	USERNAME = "8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix"
-	PASSWORD = "006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf"
+	USERNAME = global cloud_acct_username
+	PASSWORD = global cloud_acct_pword
+	URL=cloud_act_url
 
-	client = Cloudant(USERNAME,PASSWORD, url = "https://8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix:006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf@8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix.cloudantnosqldb.appdomain.cloud" )
+	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	client.connect()
-	# location='Backyard'
 
 	my_database = client["temps"]
 	query = Query(my_database,selector= {'_id': {'$gt': 0}, 'l':location, 'd':dt.datetime.now().strftime("%m-%d-%Y")}, fields=['temp','l','d'],sort=[{'temp': 'desc'}])
@@ -529,10 +543,6 @@ def read_high_low_day_temp(location):
 		value_list.append(row['temp'])
 
 
-	#print (value_list)
-
-	#print("the highest temp in the",location, "is:", max(value_list), "lowest", min(value_list),)
-	
 	if len(value_list)==0:
 		msg="insuficient data to produce response"
 
@@ -547,10 +557,11 @@ def read_high_low_night_temp(location):
 	###### DATA for MORNING update email ####
 	#########################################
 
-	USERNAME = "8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix"
-	PASSWORD = "006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf"
+	USERNAME = global cloud_acct_username
+	PASSWORD = global cloud_acct_pword
+	URL=cloud_act_url
 
-	client = Cloudant(USERNAME,PASSWORD, url = "https://8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix:006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf@8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix.cloudantnosqldb.appdomain.cloud" )
+	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	client.connect()
 	# location='Backyard'
 	cur_date=dt.datetime.now()
@@ -570,11 +581,10 @@ def read_high_low_night_temp(location):
 
 	value_list=[]
 
-	#filter out last nights temps
 	print ('filtering out last nights measurements, there are', len(temp_dict), 'readings')
 	print ('currently there are', len(value_list), 'temps stored\n')
 
-	#Filter results that are night before and after 10
+
 	for row in temp_dict:
 		db_date=dt.datetime.strptime(row['d'],"%m-%d-%Y")
 		db_time=dt.datetime.strptime(row['t'],"%H:%M:%S")
@@ -582,26 +592,13 @@ def read_high_low_night_temp(location):
 		db_date=db_date.strftime("%m-%d-%Y")
 		db_time=db_time.strftime("%H:%M:%S")
 		
-		# print ('the database date is', db_date)
-		# print ('the day before date is', target_date)
-		# print ('the database time is', db_time, '\n')
 		
 		target_time=dt.datetime.strptime("20:00:00", "%H:%M:%S")
 		target_time=target_time.strftime("%H:%M:%S")
 		
-		# print ('The target time is',target_time)
-		# print ("the first date is", db_date, "and the temperature is", row['temp'],'\n')
-		
-		# print ('going to check if the database date', db_date, "matches the target date:",target_date)
-		# print ('and if database time', db_time, 'is after (greater than) the target time', target_time) 
-		#
-		
-		# name = input("press enter to continue ")
+
 		if db_date==target_date and db_time>target_time:		
-			# print ('The database time and date meet the requirements, adding to tuple')
 			value_list.append(row['temp'])
-		# else:
-			# print ("doesn't meet first set of requirements")
 
 		new_target_time=dt.datetime.strptime("6:00:00", "%H:%M:%S")
 		new_target_time=new_target_time.strftime("%H:%M:%S")
@@ -622,41 +619,15 @@ def read_high_low_night_temp(location):
 	
 	return message
 
-# def read_high_low_night_temp(location):
-# 	USERNAME = "8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix"
-# 	PASSWORD = "006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf"
 
-# 	client = Cloudant(USERNAME,PASSWORD, url = "https://8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix:006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf@8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix.cloudantnosqldb.appdomain.cloud" )
-# 	client.connect()
-# 	# location='Backyard'
-
-# 	my_database = client["temps"]
-# 	query = Query(my_database,selector= {'_id': {'$gt': 0}, 'l':location, 'd':dt.datetime.now().strftime("%m-%d-%Y")}, fields=['temp','l','d'],sort=[{'temp': 'desc'}])
-# 	temp_dict={}
-
-# 	###### for debugging uncomment following two lines
-# 	# for doc in query(limit=30, skip=5)['docs']:
-# 	#      print (doc)
-
-# 	temp_dict=query(limit=1000, skip=5)['docs']
-
-# 	value_list=[]
-
-# 	for row in temp_dict:
-# 		#print ("value number:", row, "is", row['temp'])
-# 		value_list.append(row['temp'])
-
-
-# 	#print (value_list)
-
-# 	#print("the highest temp in the",location, "is:", max(value_list), "lowest", min(value_list),)
-# 	msg=" the highest temp in the " + location + " was: "+str(max(value_list)) + " lowest "+str(min(value_list))
-# 	return msg
 def read_status_from_cloudant(device_id,field):
-	USERNAME = "8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix"
-	PASSWORD = "006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf"
 
-	client = Cloudant(USERNAME,PASSWORD, url = "https://8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix:006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf@8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix.cloudantnosqldb.appdomain.cloud" )
+	USERNAME = global cloud_acct_username
+	PASSWORD = global cloud_acct_pword
+	URL=cloud_act_url
+
+
+	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	client.connect()
 	my_database = client["system_status"]
 	my_document = my_database[device_id]
@@ -665,10 +636,11 @@ def read_status_from_cloudant(device_id,field):
 
 	return current_temp,current_time
 def backyard_read_temp_from_cloudant(device_id):
-	USERNAME = "8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix"
-	PASSWORD = "006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf"
+	USERNAME = global cloud_acct_username
+	PASSWORD = global cloud_acct_pword
+	URL=cloud_act_url
 
-	client = Cloudant(USERNAME,PASSWORD, url = "https://8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix:006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf@8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix.cloudantnosqldb.appdomain.cloud" )
+	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	client.connect()
 	my_database = client["system_status"]
 	my_document = my_database[device_id]
@@ -686,30 +658,7 @@ def evening_report(errors, reads):
 	message="general error count = " + str(errors) + "\rread cycles = " + str(reads)+ "\r"
 	message=message+"The number of online sensors = "+str(len(glob.glob("28*")))+ "\r"
 	message=message+"ds18b20 errors = " + str(ds18b20_error_count)+"\r"
-	# online_ds18b20_sensor_serial_list=[]
-	# online_ds18b20_sensor_name_list=[]
-	# # message_body=[]
 
-	# # for row in ds18b20_sensor_dict:
-	# # 	print (row['location'])
-
-	# ## develop a list of online sensors
-	# for sensor_file in glob.glob("28*"):
-	# 	device_file = temp_base_dir + sensor_file + '/w1_slave'
-	# 	online_ds18b20_sensor_serial_list.append(sensor_file)
-
-
-	# ## get the names for all the online sensors
-	# for serial in online_ds18b20_sensor_serial_list:
-	# 	for row in ds18b20_sensor_dict:
-	# 		if serial == row['serial']:
-	# 			online_ds18b20_sensor_name_list.append(row['location'])
-	# message=message+"\r\r\nTEMPERATURE READINGS \r\r\n"
-	### build email message body for temperatures
-	# for n in online_ds18b20_sensor_name_list:
-	# 	# message_body.append(read_high_low_day_temp(n))
-	# 	msg_iteration=read_high_low_day_temp(n)
-	# 	message=message+str(msg_iteration)+"\r\n"
 
 	status_dict=build_status_dict() 
 	for row in status_dict:
@@ -724,21 +673,15 @@ def evening_report(errors, reads):
 
 
 
-
-		# for i in row:
-		# 	print ('key', i,'has value', row[i])
-
-	# for line in message_body:
-	# 	message=message+line
-
 	print(message)
-	send_html_email('evening report', message)
+	send_html_email('evening report', message, gmail_user,gmail_password)
 
 def build_status_dict():
-	USERNAME = "8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix"
-	PASSWORD = "006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf"
+	USERNAME = global cloud_acct_username
+	PASSWORD = global cloud_acct_pword
+	URL=cloud_act_url
 
-	client = Cloudant(USERNAME,PASSWORD, url = "https://8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix:006d4df070101f4d115325956e7f9133a26697c0ab2765c6ed5709f6b26cddbf@8c1205d4-f169-4cb0-a62e-73d6dba754fb-bluemix.cloudantnosqldb.appdomain.cloud" )
+	client = Cloudant(USERNAME,PASSWORD, url = URL )
 	client.connect()
 	my_database = client["system_status"]
 	local_status_dict=[]
@@ -751,6 +694,17 @@ def build_status_dict():
 ####################################
 ######## constants #################
 ####################################
+
+
+get_user_data()
+cloud_acct_org_name =user_data['cloud_acct_org_name']
+cloud_acct_pword=user_data['cloud_acct_pword']
+cloud_act_url= user_data['cloud_act_url']
+cloud_acct_API_key= user_data['cloud_acct_API_key']
+gmail_user= user_data['gmail_user']
+gmail_password= user_data['gmail_password']
+cloudant_username=user_data['cloud_acct_username']
+
 
 base_dir = '/sys/bus/w1/devices/'
 online_sensor_list=[]
@@ -843,21 +797,6 @@ write_to_log("Your Organization Id is: " + orgId)
 
 
 while day_of_year == dt.datetime.now().timetuple().tm_yday:
-	# if beginning_of_day==False and read_cycles>2:
-	# 	try:
-	# 		print (read_high_low_day_temp("Backyard"))
-	# 	except:
-	# 		print ("error reading high/low temps, sleeping 30 seconds to let error flush")
-	# 		time.sleep(30)
-	# 		error_count+=1
-
-
-	# 	try:
-	# 		print (read_high_low_day_temp("Driveway"))
-	# 	except:
-	# 		print ("error reading high/low temps, sleeping 30 seconds to let error flush")
-	# 		time.sleep(30)
-	# 		error_count+=1
 
 	if dt.datetime.now().hour>7 and morning_report_sent == False and read_cycles>1:
 
@@ -894,7 +833,7 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 			subject="at " +str(backyard_temp_time)+" the backyard temp was: "+str(backyard_temp)
 			# print (subject)
 
-			send_email(subject, message)
+			send_email(subject, message, gmail_user, gmail_password)
 
 		except:
 			print ("error sending email")
@@ -905,38 +844,6 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 	if dt.datetime.now().hour>20 and  morning_report_sent == True and evening_report_sent ==False and read_cycles>1:
 		evening_report(error_count,read_cycles)
 
-
-		# msg1=read_high_low_day_temp("Backyard")
-		# msg2=read_high_low_day_temp("Driveway")
-		# msg3=""
-		# ####  insert send evening report sub here
-
-		# for row in door_dict:
-		# 	print ("going to read" , row['door_name'], "door, on pin number", row['pin'],"\n")
-
-		# 	curDoor_name=row['door_name']
-		# 	curPin_number=int(row['pin'])
-		# 	test_total=0
-
-		# 	for x in range(9):
-		# 		text_num=str(x)
-		# 		#curReading=str(GPIO.input(curPin_number))
-
-		# 		#print ("reading number",text_num, "is", GPIO.input(curPin_number))
-
-		# 		if GPIO.input(curPin_number) == 1:
-		# 			test_total=test_total+1
-
-
-		# 	if test_total>8: 
-		# 		msg3=msg3 + "\r\r\n" + curDoor_name + " door is open"
-		# 		cur_door_status="open"
-		# 	if test_total<2:
-		# 		cur_door_status="closed"
-		# 		msg3=msg3 + "\r\r\n" + curDoor_name+" door is closed"
-
-		# send_email('evening update', msg1 + "\r\r\n" + msg2 + "\r\r\n" + msg3)
-		# evening_report_sent=True
 
 
 	read_cycles=read_cycles+1
@@ -960,6 +867,7 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 		cur_id=row['id']
 		print ("Sensor =",cur_sensor, "temp is:", cur_temp,"sensor location is:", cur_local)
 		print ("the cloundat id for this is:",cur_id)
+		evening_report_sent=True
 		#logging.info("Sensor = %s temp is: %s sensor location is: %s",cur_sensor, cur_temp, cur_local)
 
 		# print "sensor ID = ",sensor_file, "that has the temperature of:", read_temp(),\
