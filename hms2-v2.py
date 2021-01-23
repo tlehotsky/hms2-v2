@@ -332,21 +332,61 @@ def read_temp():
 	return round((temp_total/temp_read_cycles),1)
 
 
-def write_to_log(text):
+def write_to_log(text, USERNAME, PASSWORD, URL):
 	msg=" STATUS Date:"+ str(RecDate()) + " AT TIME: "+ str(RecTime())+": "+ str(text)+str('\n')
 	print ("Writting to LOG file:", msg)
-	log_txt_file="/home/pi/hms/" + str(RecDate())+"-HMS-log.txt"
-	f=open(log_txt_file, 'a')
-	f.write(msg)
-	f.close()
+	# log_txt_file="/home/pi/hms/" + str(RecDate())+"-HMS-log.txt"
+	# f=open(log_txt_file, 'a')
+	# f.write(msg)
+	# f.close()
 
-def write_to_Error_log(text):
+	DATABASE_NAME="log"
+	client = Cloudant(USERNAME,PASSWORD, url = URL )
+
+	my_database = client[DATABASE_NAME]
+
+	json_document = {
+	     "d":dt.datetime.now().strftime("%m-%d-%Y"),
+	     "t":dt.datetime.now().strftime("%H:%M:%S"),
+	     "m":msg
+	}
+	try:
+		new_document = my_database.create_document(json_document)
+	except:
+		time.sleep(30)
+		try:
+			new_document = my_database.create_document(json_document)
+		except:
+			return
+	client.disconnect()
+
+def write_to_Error_log(text, USERNAME, PASSWORD, URL):
 	msg="ERROR - Date:"+ str(RecDate()) + " AT TIME: "+ str(RecTime())+": "+ str(text)+str('\n')
 	print ("Writting to ERROR LOG file:", msg)
-	log_txt_file="/home/pi/hms/" + str(RecDate())+"-HMS-log.txt"
-	f=open(log_txt_file, 'a')
-	f.write(msg)
-	f.close()
+	# log_txt_file="/home/pi/hms/" + str(RecDate())+"-HMS-log.txt"
+	# f=open(log_txt_file, 'a')
+	# f.write(msg)
+	# f.close()
+
+	DATABASE_NAME="log"
+	client = Cloudant(USERNAME,PASSWORD, url = URL )
+
+	my_database = client[DATABASE_NAME]
+
+	json_document = {
+	     "d":dt.datetime.now().strftime("%m-%d-%Y"),
+	     "t":dt.datetime.now().strftime("%H:%M:%S"),
+	     "m":msg
+	}
+	try:
+		new_document = my_database.create_document(json_document)
+	except:
+		time.sleep(30)
+		try:
+			new_document = my_database.create_document(json_document)
+		except:
+			return
+	client.disconnect()
 
 
 def temp_analytics(sensor_id, local, temp, beginning_of_day):
@@ -736,10 +776,10 @@ print ("day of year is",day_of_year)
 
 # time.sleep(5)
 
-write_to_log("Program started at" + str(RecTime())+" on " + str(RecDate()))
+write_to_log("Program started at" + str(RecTime())+" on " + str(RecDate()), cloudant_username, cloud_acct_pword, cloud_act_url)
 # logging.info('\n')
-print ("The number of online sensors is: ", len(glob.glob("28*")),)
-write_to_log("The number of online sensors is: " + str(len(glob.glob("28*"))))
+print ("The number of online sensors is: ", len(glob.glob("28*")))
+write_to_log("The number of online sensors is: " + str(len(glob.glob("28*"))), cloudant_username, cloud_acct_pword, cloud_act_url)
 
 
 
@@ -747,11 +787,11 @@ write_to_log("The number of online sensors is: " + str(len(glob.glob("28*"))))
 
 print ("\n")
 print ("Your account name is:", account_name)
-write_to_log("Your account name is: "+ account_name)
+write_to_log("Your account name is: "+ account_name, cloudant_username, cloud_acct_pword, cloud_act_url)
 
 
 print ("Your Organization Id is:", orgId, "\n")
-write_to_log("Your Organization Id is: " + orgId)
+write_to_log("Your Organization Id is: " + orgId, cloudant_username, cloud_acct_pword, cloud_act_url)
 
 # print ("ds18b20 Sensor Dictionary =",ds18b20_sensor_dict)
 # time.sleep(5)
@@ -838,14 +878,14 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 		try:
 			write_to_cloudant(cur_sensor, cur_local, cur_temp,cloudant_username, cloud_acct_pword, cloud_act_url)
 		except:
-			write_to_Error_log("error writting temperature to cloudant, waiting 30 seconds then retrying")
+			write_to_Error_log("error writting temperature to cloudant, waiting 30 seconds then retrying", cloudant_username, cloud_acct_pword, cloud_act_url)
 			time.sleep(30)
 			error_count+=1
 
 			try:
 				write_to_cloudant(cur_sensor, cur_local, cur_temp, cloudant_username, cloud_acct_pword, cloud_act_url)
 			except:
-				write_to_Error_log("2nd error in a row writting to cloundant, sleeping 5 minuts then skipping")
+				write_to_Error_log("2nd error in a row writting to cloundant, sleeping 5 minuts then skipping", cloudant_username, cloud_acct_pword, cloud_act_url)
 				time.sleep(300)
 				error_count+=1
 
@@ -856,14 +896,14 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 			try: 
 				write_to_iot_platform(orgId, cur_sensor, token, cur_temp)
 			except:
-				write_to_Error_log("error writting to IoT platform, waiting 30 seconds then retrying")
+				write_to_Error_log("error writting to IoT platform, waiting 30 seconds then retrying", cloudant_username, cloud_acct_pword, cloud_act_url)
 				time.sleep(30)
 
 				try:
 					write_to_iot_platform(orgId, cur_sensor, token, cur_temp)
 					
 				except:
-					write_to_Error_log("2nd error in a row writting to IoT platform, sleeping 5 minutes then skipping")
+					write_to_Error_log("2nd error in a row writting to IoT platform, sleeping 5 minutes then skipping", cloudant_username, cloud_acct_pword, cloud_act_url)
 					time.sleep(300)
 					error_count+=1
 
@@ -875,7 +915,7 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 			online_sensor_list.append(sensor_file)
 			msg="NEW ONLINE SENSOR "+ sensor_file + " located at "+ row['location']
 			# print msg
-			write_to_log(msg)
+			write_to_log(msg, cloudant_username, cloud_acct_pword, cloud_act_url)
 		time.sleep(sleep_between_sensor_reads)
 
 	cur_door_status=""
@@ -908,14 +948,14 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 		try:
 			write_door_position_to_cloudant(curDoor_name, cur_door_status, cloudant_username, cloud_acct_pword, cloud_act_url)
 		except:
-			write_to_log("error writing door position to cloudant, sleeping for 30 seconds then re-trying")
+			write_to_log("error writing door position to cloudant, sleeping for 30 seconds then re-trying", cloudant_username, cloud_acct_pword, cloud_act_url)
 			error_count+=1
 
 			try:
 				write_door_position_to_cloudant(curDoor_name, cur_door_status, cloudant_username, cloud_acct_pword, cloud_act_url)
 
 			except:
-				write_to_log("2nd error in a row writing door position to cloudant, sleeping for 5 minutes then skipping")
+				write_to_log("2nd error in a row writing door position to cloudant, sleeping for 5 minutes then skipping", cloudant_username, cloud_acct_pword, cloud_act_url)
 				time.sleep(300)
 				error_count+=1
 
@@ -938,7 +978,7 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 
 
 print ("its  a new day !!!!")
-write_to_log("the previous day is over, total number of reads for that day = " + str(read_cycles))
+write_to_log("the previous day is over, total number of reads for that day = " + str(read_cycles), cloudant_username, cloud_acct_pword, cloud_act_url)
 print ("going to sleep for 30 sconds then rebooting")
 write_to_log ("going to sleep for 30 sconds then rebooting")
 time.sleep(30)
