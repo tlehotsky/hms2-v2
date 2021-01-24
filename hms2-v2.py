@@ -340,8 +340,10 @@ def write_to_log(text, USERNAME, PASSWORD, URL):
 	# f.write(msg)
 	# f.close()
 
-	DATABASE_NAME="log" 
+	DATABASE_NAME="hms_log" 
 	client = Cloudant(USERNAME, PASSWORD, url = URL )
+
+	client.connect()
 
 	my_database = client[DATABASE_NAME]
 
@@ -353,6 +355,7 @@ def write_to_log(text, USERNAME, PASSWORD, URL):
 	try:
 		new_document = my_database.create_document(json_document)
 	except:
+		print ('error writing to database')
 		time.sleep(30)
 		try:
 			new_document = my_database.create_document(json_document)
@@ -368,8 +371,10 @@ def write_to_Error_log(text, USERNAME, PASSWORD, URL):
 	# f.write(msg)
 	# f.close()
 
-	DATABASE_NAME="log"
+	DATABASE_NAME="hms_log"
 	client = Cloudant(USERNAME,PASSWORD, url = URL )
+
+	client.connect()
 
 	my_database = client[DATABASE_NAME]
 
@@ -776,7 +781,8 @@ print ("day of year is",day_of_year)
 
 # time.sleep(5)
 
-write_to_log("Program started at" + str(RecTime())+" on " + str(RecDate()), cloudant_username, cloud_acct_pword, cloud_act_url)
+log_msg="Program started at" + str(RecTime())+" on " + str(RecDate())
+write_to_log(log_msg, cloudant_username, cloud_acct_pword, cloud_act_url)
 # logging.info('\n')
 print ("The number of online sensors is: ", len(glob.glob("28*")))
 write_to_log("The number of online sensors is: " + str(len(glob.glob("28*"))), cloudant_username, cloud_acct_pword, cloud_act_url)
