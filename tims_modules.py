@@ -1,6 +1,11 @@
 #!/usr/bin/python
 # -*- coding:UTF-8 -*-
 
+
+#git update 1/27/2021
+
+
+
 from datetime import datetime
 import datetime as dt
 import os, shutil, glob, time, subprocess, re, sys, sqlite3, logging, smtplib
