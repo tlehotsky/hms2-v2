@@ -179,6 +179,10 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 
 	if dt.datetime.now().hour>7 and morning_report_sent == False and read_cycles>0:
 
+		###########################################################################
+		####################### send morning report ###############################
+		###########################################################################
+
 		try:
 			msg1= read_high_low_night_temp("Backyard", cloudant_username, cloud_acct_pword, cloud_act_url)
 			morning_report_sent=True
@@ -226,6 +230,10 @@ while day_of_year == dt.datetime.now().timetuple().tm_yday:
 		# if dt.datetime.now().hour>21 and morning_report_sent == True and evening_report_sent ==False and read_cycles>2:
 
 	if dt.datetime.now().hour>20 and  morning_report_sent == True and evening_report_sent ==False and read_cycles>1:
+		###########################################################################
+		####################### send evening report ###############################
+		###########################################################################
+
 		evening_report(error_count,read_cycles)
 
 
